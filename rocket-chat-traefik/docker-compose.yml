@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  rocketchat:
+    image: rocket.chat:latest
+    restart: always
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/rocketchat
+      - ROOT_URL=http://${DOMAIN_NAME}   # 替换为你的实际域名
+      - PORT=3000
+    depends_on:
+      - mongo
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rocketchat.entrypoints=websecure"
+      - "traefik.http.routers.rocketchat.rule=Host(`${DOMAIN_NAME}`)"
+      - "traefik.http.routers.rocketchat.tls=true"
+      - "traefik.http.routers.rocketchat.tls.certresolver=your_cert_resolver"  # 替换为 Traefik 配置中的证书解析器名称
+      - "traefik.http.services.rocketchat.loadbalancer.server.port=3000"
+
+  mongo:
+    image: mongo:4.4
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
