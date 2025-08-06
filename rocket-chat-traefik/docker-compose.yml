@@ -5,8 +5,9 @@ services:
     image: rocket.chat:latest
     restart: always
     environment:
+      - DOMAIN_NAME=jinyang756.github.io
       - MONGO_URL=mongodb://mongo:27017/rocketchat
-      - ROOT_URL=http://${DOMAIN_NAME}   # 替换为你的实际域名
+      - ROOT_URL=http://${DOMAIN_NAME}
       - PORT=3000
     depends_on:
       - mongo
